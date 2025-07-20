@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domain Security Checker</title>
+    <script>
+        async function checkDomain() {
+            const domain = document.getElementById("domain").value;
+            if (!domain) {
+                alert("Please enter a domain");
+                return;
+            }
+
+            const response = await fetch(`http://localhost:8080/check?domain=${domain}`);
+            const data = await response.json();
+
+            document.getElementById("result").innerHTML = `
+                <p><strong>Domain:</strong> ${data.domain}</p>
+                <p><strong>Has MX:</strong> ${data.hasMX}</p>
+                <p><strong>Has SPF:</strong> ${data.hasSPF}</p>
+                <p><strong>SPF Record:</strong> ${data.spfRecord || "N/A"}</p>
+                <p><strong>Has DMARC:</strong> ${data.hasDMARC}</p>
+                <p><strong>DMARC Record:</strong> ${data.dmarcRecord || "N/A"}</p>
+            `;
+            document.getElementById("result").style.display = "block"; // Show result box
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #e46992;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            margin-bottom: 10px;
+            color: rgb(1, 12, 12);
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #4de771;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #8eb9e4;
+            display: none; /* Hide by default */
+        }
+    </style>
+</head>
+<body>
+    <h2>Domain Security Checker</h2>
+    <input type="text" id="domain" placeholder="Enter domain (example.com)">
+    <button onclick="checkDomain()">Check</button>
+    <div id="result"></div>
+</body>
+</html>
